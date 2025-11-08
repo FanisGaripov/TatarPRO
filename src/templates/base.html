@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <title>ТатарPRO - {% block title %}{% endblock %}</title>
 </head>
 <body>
-
+{% include "includes/header.html" %}
+{% block content %}
+Кызганычка каршы, монда әлегә бернәрсә дә юк!
+{% endblock %}
+{% include "includes/footer.html" %}
 </body>
 </html>

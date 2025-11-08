@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    {% block title %}Проект турында{% endblock %}
+    {% block description %}Проект турында берничә җөмлә{% endblock %}
 </head>
 <body>
-
+{% block content %}
+Менә шулай!
+{% endblock %}
 </body>
 </html>
