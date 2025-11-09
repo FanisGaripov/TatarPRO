@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Тестлар бите{% endblock %}
+{% block description %}Бу биттә төрле тестлар, квизлар табып була{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Татар теленнән тестлар</h1>
+
+        <div class="row">
+            {% for test in tests %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ test.title }}</h5>
+                        <p class="card-text">{{ test.description }}</p>
+                        <p class="text-muted">
+                            📝 Сораулар: {{ test.questions_count }}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url_for('teacher_test', test_id=test.id) }}" class="btn btn-primary w-100">
+                            Башларга
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    Тестлар табылмады :(
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+{% endblock %}

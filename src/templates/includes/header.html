@@ -10,13 +10,20 @@
             width: 280px;
         }
         .sidebar.collapsed {
-            width: 70px;
+            width: 108px;
         }
         .sidebar.collapsed .nav-link-text,
-        .sidebar.collapsed .logo-text,
+        .sidebar.collapsed .full,
+        .sidebar.collapsed .profile-info,
         .sidebar.collapsed .menu-section {
             display: none;
         }
+
+        .sidebar.collapsed .menu-section-small,
+        .sidebar.collapsed .small {
+            display: block !important;
+        }
+
         .sidebar.collapsed .nav-link {
             text-align: center;
             padding: 0.75rem 0.5rem;
@@ -54,7 +61,7 @@
             margin-left: 280px;
         }
         .main-content.sidebar-collapsed {
-            margin-left: 70px;
+            margin-left: 100px;
         }
         .toggle-btn {
             border: none;
@@ -109,12 +116,9 @@
             font-weight: bold;
             font-size: 1.1rem;
         }
-        /* Убираем лого из навбара */
         header .d-flex.align-items-center {
             display: none !important;
         }
-
-        /* Исправляем полоски в мини-версии */
         .sidebar.collapsed .sidebar-header {
             padding: 0.75rem 0.25rem !important;
             margin: 0;
@@ -123,7 +127,6 @@
             margin: 0.125rem 0.25rem !important;
             padding: 0.6rem 0.4rem !important;
         }
-        /* Стили для профиля */
         .profile-section {
             border-top: 1px solid #dee2e6;
             padding: 1rem;
@@ -172,8 +175,13 @@
         <nav class="nav flex-column h-100">
             <div class="sidebar-header p-3 border-bottom d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <img src="{{ url_for('static', filename='img/favicon.png') }}" alt="Логотип" width="32" height="32" class="me-2">
-                    <span class="logo-text">ТатарPRO</span>
+                    <div class="full">
+                        <img src="{{ url_for('static', filename='img/favicon.png') }}" alt="Логотип" width="32" height="32" class="me-2">
+                        <span class="logo-text">ТатарPRO</span>
+                    </div>
+                    <div style="display: None" class="small">
+                        <img src="{{ url_for('static', filename='img/favicon.png') }}" alt="Логотип" width="32" height="32" class="me-2">
+                    </div>
                 </div>
                 <button class="toggle-btn" id="sidebarToggle">
                     <i class="bi bi-chevron-right"></i>
@@ -224,6 +232,43 @@
                         <span class="nav-link-text">Урта мәктәп</span>
                     </a>
                 </div>
+
+
+                <div style="display: none" class="menu-section-small">
+                    <h6 class="text-muted text-uppercase small px-3 mt-3 mb-1">Тел өйрәнү</h6>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-book me-2"></i>
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-mic me-2"></i>
+                    </a>
+                    <a class="nav-link active" href="#">
+                        <i class="bi bi-pencil-square me-2"></i>
+                    </a>
+                </div>
+
+                <div style="display: none" class="menu-section-small">
+                    <h6 class="text-muted text-uppercase small px-3 mt-3 mb-1">Сәнгать</h6>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-heart me-2"></i>
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-bookmark me-2"></i>
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-star me-2"></i>
+                    </a>
+                </div>
+
+                <div style="display: none" class="menu-section-small">
+                    <h6 class="text-muted text-uppercase small px-3 mt-3 mb-1">Тестлар</h6>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-check-circle me-2"></i>
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-award me-2"></i>
+                    </a>
+                </div>
             </div>
             <!-- Добавляем секцию профиля -->
         <div class="profile-section">
@@ -266,7 +311,7 @@
                 <li><a href="{{ url_for('change_language_to_rus') }}" class="nav-link px-2 link-dark"><img style="margin-right: 3px;" src="{{ url_for('static', filename='img/russia-icon.png') }}"> Рус</a></li>
                 <li><a href="{{ url_for('index') }}" class="nav-link px-2 link-dark">Төп бит</a></li>
                 <li><a href="{{ url_for('about') }}" class="nav-link px-2 link-dark">Проект турында</a></li>
-                <li><a href="#" class="nav-link px-2 link-dark">Белмим нәрсә икәнен</a></li>
+                <li><a href="{{ url_for('tests_page') }}" class="nav-link px-2 link-dark">Тестлар</a></li>
             </ul>
         </header>
     </div>

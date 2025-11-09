@@ -1,13 +1,15 @@
 import http
 import os
 import random
+import xml.etree.ElementTree as ET
 
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, jsonify
 from flask_login import login_required, UserMixin, LoginManager, login_user
 import flask_login
-from models import db, User
+from models import db, User, Tests, TestResult
 from werkzeug.utils import secure_filename
+import requests
 
 
 load_dotenv()
@@ -64,68 +66,264 @@ def day_phrase():
     )
 
 
+def translate_tatar_api(lang, text):
+    # lang = 0 татарский
+    # lang = 1 русский
+    url = f'https://translate.tatar/translate?lang={lang}&text={text}'
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            root = ET.fromstring(response.text)
+            result = {
+                'word': None,
+                'part_of_speech': None,
+                'translation': None,
+                'examples': [],
+                'machine_translation': None
+            }
+
+            for elem in root:
+                if elem.tag == 'word':
+                    result['word'] = elem.text
+                elif elem.tag == 'POS':
+                    result['part_of_speech'] = elem.text
+                elif elem.tag == 'translation':
+                    result['translation'] = elem.text
+                elif elem.tag == 'examples':
+                    # Обрабатываем примеры, если они есть
+                    if elem.text and elem.text.strip():
+                        result['examples'] = [ex.strip() for ex in elem.text.split(';') if ex.strip()]
+                elif elem.tag == 'mt':
+                    result['machine_translation'] = elem.text
+
+            return result
+        return None
+    except Exception as e:
+        return None
+
+
 @app.route('/syzlek')
-def vocabulary():
-    return render_template('pages/vocabulary.html')
+def vocabulary_page():
+    return render_template('pages/vocabulary_language_select.html')
 
 
-# @app.route('/tests')
-# def tests_page():
-#     return render_template('pages/tests.html')
+@app.route('/syzlek/ru_to_tat/<word>')
+def vocabulary_ru_to_tat(word):
+    if word:
+        result = translate_tatar_api(0, word)
+        return render_template('pages/vocabulary.html', result=result)
+    else:
+        return render_template('pages/vocabulary.html')
 
 
-@app.route('/create-test')
-def create_tests():
-    return render_template('pages/create_tests.html')
+@app.route('/syzlek/tat_to_ru/<word>')
+def vocabulary_tat_to_ru(word):
+    if word:
+        result = translate_tatar_api(1, word)
+        return render_template('pages/vocabulary.html', result=result)
+    else:
+        return render_template('pages/vocabulary.html')
 
-tatar_tests = {
-    'vocabulary': [
-        {
-            'id': 1,
-            'question': 'Как переводится "әни"?',
-            'options': ['Отец', 'Мать', 'Брат', 'Сестра'],
-            'correct_answer': 1,
-            'explanation': 'Әни - мать на татарском языке'
-        },
-        {
-            'id': 2,
-            'question': 'Выберите правильный перевод слова "китап"',
-            'options': ['Ручка', 'Книга', 'Стол', 'Окно'],
-            'correct_answer': 1,
-            'explanation': 'Китап - книга на татарском языке'
-        },
-        {
-            'id': 3,
-            'question': 'Что означает "рәхмәт"?',
-            'options': ['Пожалуйста', 'Спасибо', 'Извините', 'До свидания'],
-            'correct_answer': 1,
-            'explanation': 'Рәхмәт - спасибо на татарском языке'
-        }
-    ],
-    'grammar': [
-        {
-            'id': 1,
-            'question': 'Выберите правильную форму: "Мин ... барам" (я иду домой)',
-            'options': ['өйгә', 'өйдә', 'өйдән', 'өй'],
-            'correct_answer': 0,
-            'explanation': 'Правильная форма - "өйгә" (направление движения)'
-        },
-        {
-            'id': 2,
-            'question': 'Завершите предложение: "Ул ... яза" (Он пишет письмо)',
-            'options': ['хатны', 'хатта', 'хат', 'хатка'],
-            'correct_answer': 2,
-            'explanation': 'Прямое дополнение в татарском языке стоит в основном падеже'
-        }
-    ]
-}
+
+def add_sample_tests():
+    """Добавление примеров тестов"""
+
+    # Тест 1: Базовый словарный запас
+    test1_data = {
+        "questions": [
+            {
+                "id": 1,
+                "question": "Как переводится 'әни'?",
+                "options": ["Отец", "Мать", "Брат", "Сестра"],
+                "correct_answer": 1,
+                "explanation": "Әни - мать на татарском языке"
+            },
+            {
+                "id": 2,
+                "question": "Выберите правильный перевод слова 'китап'",
+                "options": ["Ручка", "Книга", "Стол", "Окно"],
+                "correct_answer": 1,
+                "explanation": "Китап - книга на татарском языке"
+            },
+            {
+                "id": 3,
+                "question": "Что означает 'рәхмәт'?",
+                "options": ["Пожалуйста", "Спасибо", "Извините", "До свидания"],
+                "correct_answer": 1,
+                "explanation": "Рәхмәт - спасибо на татарском языке"
+            }
+        ]
+    }
+
+    test1 = Tests(
+        title="Базовый словарный запас",
+        description="Основные слова татарского языка для начинающих"
+    )
+    test1.set_test_data(test1_data)
+
+    # Тест 2: Грамматика
+    test2_data = {
+        "questions": [
+            {
+                "id": 1,
+                "question": "Выберите правильную форму: 'Мин ... барам' (я иду домой)",
+                "options": ["өйгә", "өйдә", "өйдән", "өй"],
+                "correct_answer": 0,
+                "explanation": "Правильная форма - 'өйгә' (направление движения)"
+            },
+            {
+                "id": 2,
+                "question": "Завершите предложение: 'Ул ... яза' (Он пишет письмо)",
+                "options": ["хатны", "хатта", "хат", "хатка"],
+                "correct_answer": 2,
+                "explanation": "Прямое дополнение в татарском языке стоит в основном падеже"
+            }
+        ]
+    }
+
+    test2 = Tests(
+        title="Основы грамматики",
+        description="Базовые грамматические правила татарского языка"
+    )
+    test2.set_test_data(test2_data)
+
+    # Тест 3: Разговорные фразы
+    test3_data = {
+        "questions": [
+            {
+                "id": 1,
+                "question": "Как поздороваться утром?",
+                "options": ["Хәерле иртә!", "Хәерле кич!", "Хәерле көн!", "Сәлам!"],
+                "correct_answer": 0,
+                "explanation": "Хәерле иртә! - Доброе утро!"
+            },
+            {
+                "id": 2,
+                "question": "Как спросить 'Как дела?'",
+                "options": ["Ничек яшисез?", "Нинди яшисез?", "Кая яшисез?", "Кем яшисез?"],
+                "correct_answer": 0,
+                "explanation": "Ничек яшисез? - Как поживаете?"
+            }
+        ]
+    }
+
+    test3 = Tests(
+        title="Разговорные фразы",
+        description="Основные фразы для повседневного общения"
+    )
+    test3.set_test_data(test3_data)
+
+    db.session.add(test1)
+    db.session.add(test2)
+    db.session.add(test3)
+    db.session.commit()
+
+    print("Тестовые данные добавлены!")
 
 
 @app.route('/tests')
-def teacher_test():
-    test_questions = tatar_tests['grammar']
-    return render_template('pages/teacher_test.html', test_type='grammar',
-                         questions=test_questions)
+def tests_page():
+    tests = Tests.query.all()
+    return render_template('pages/tests.html', tests=tests)
+
+
+@app.route('/create-test', methods=['GET', 'POST'])
+def create_tests():
+    # test3_data = {
+    #     "questions": [
+    #         {
+    #             "id": 1,
+    #             "question": "Как поздороваться утром?",
+    #             "options": ["Хәерле иртә!", "Хәерле кич!", "Хәерле көн!", "Сәлам!"],
+    #             "correct_answer": 0,
+    #             "explanation": "Хәерле иртә! - Доброе утро!"
+    #         },
+    #         {
+    #             "id": 2,
+    #             "question": "Как спросить 'Как дела?'",
+    #             "options": ["Ничек яшисез?", "Нинди яшисез?", "Кая яшисез?", "Кем яшисез?"],
+    #             "correct_answer": 0,
+    #             "explanation": "Ничек яшисез? - Как поживаете?"
+    #         }
+    #     ]
+    # }
+    return render_template('pages/create_tests.html')
+
+
+@app.route('/tests/<int:test_id>')
+def teacher_test(test_id):
+    test = Tests.query.get_or_404(test_id)
+    test_data = test.get_test_data()
+    questions = test_data.get('questions', [])
+    return render_template('pages/teacher_test.html', test=test,
+                         questions=questions)
+
+
+@app.route('/submit-test/<int:test_id>', methods=['POST'])
+def submit_test(test_id):
+    test = Tests.query.get_or_404(test_id)
+    test_data = test.get_test_data()
+    user_answers = request.json.get('answers', {})
+
+    questions = test_data.get('questions', [])
+
+    # Проверяем что вопросы есть
+    if not questions:
+        return jsonify({
+            'error': 'В тесте нет вопросов',
+            'total_questions': 0,
+            'correct_answers': 0,
+            'score': 0,
+            'details': []
+        })
+
+    results = {
+        'total_questions': len(questions),
+        'correct_answers': 0,
+        'score': 0,
+        'details': []
+    }
+
+    for question in questions:
+        question_id = str(question.get('id', ''))
+        user_answer = user_answers.get(question_id)
+        correct_answer = question.get('correct_answer', -1)
+
+        is_correct = user_answer == correct_answer
+        if is_correct:
+            results['correct_answers'] += 1
+
+        results['details'].append({
+            'question_id': question_id,
+            'question_text': question.get('question', 'Вопрос не найден'),
+            'user_answer': user_answer,
+            'correct_answer': correct_answer,
+            'is_correct': is_correct,
+            'explanation': question.get('explanation', ''),
+            'options': question.get('options', [])
+        })
+
+    if results['total_questions'] > 0:
+        results['score'] = (results['correct_answers'] / results['total_questions']) * 100
+
+    # Сохраняем результат если пользователь авторизован
+    if flask_login.current_user.is_authenticated:
+        try:
+            test_result = TestResult(
+                user_id=flask_login.current_user.id,
+                test_id=test_id,
+                score=results['score'],
+                correct_answers=results['correct_answers'],
+                total_questions=results['total_questions']
+            )
+            test_result.set_answers_data(results['details'])
+            db.session.add(test_result)
+            db.session.commit()
+        except Exception as e:
+            print(f"Ошибка сохранения результата: {e}")
+            db.session.rollback()
+
+    return jsonify(results)
 
 
 @app.route('/change_lang_to_ru')
@@ -249,8 +447,18 @@ def logout():
     flask_login.logout_user()
     return redirect(url_for('login'))
 
+
+def init_database():
+    with app.app_context():
+        db.create_all()
+
+        # Добавляем тестовые данные, если их нет
+        if not Tests.query.first():
+            add_sample_tests()
+
+
 with app.app_context():
-    db.create_all()
+    init_database()
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=DEBUG)
