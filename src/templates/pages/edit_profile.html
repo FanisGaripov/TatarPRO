@@ -1,0 +1,569 @@
+{% extends 'base.html' %}
+
+{% block title %}Профильне үзгәртү, {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar-section">
+            <div class="avatar-wrapper">
+                {% if user.avatar %}
+                    <img class="profile-avatar-big" src="{{ url_for('static', filename='upload/' + user.avatar) }}" alt="Аватар" id="avatarPreview">
+                {% else %}
+                    <img class="profile-avatar-big" src="{{ url_for('static', filename='upload/default_avatar.png') }}" alt="Аватар" id="avatarPreview">
+                {% endif %}
+                <div class="avatar-overlay">
+                    <label for="avatarUpload" class="avatar-edit-btn">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                </div>
+            </div>
+            <h1 class="profile-username">{{ user.username }}</h1>
+            <p class="profile-subtitle">Профильне үзгәртү</p>
+        </div>
+    </div>
+
+    <!-- Flash сообщения -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="profile-content">
+        <form method="POST" action="{{ url_for('edit_profile') }}" enctype="multipart/form-data" class="profile-form">
+            <input type="file" id="avatarUpload" name="avatar" accept="image/*" style="display: none;">
+
+            <div class="form-sections">
+                <!-- Секция личных данных -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fas fa-user-edit"></i>
+                        <h3>Шәхес мәгълүматлары</h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="username" class="form-label">Логин *</label>
+                            <input type="text" id="username" name="username" class="form-input"
+                                   value="{{ user.username }}" required maxlength="50">
+                            <div class="form-hint">3-50 символ</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="surname" class="form-label">Фамилия *</label>
+                            <input type="text" id="surname" name="surname" class="form-input"
+                                   value="{{ user.surname }}" required maxlength="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name" class="form-label">Исем *</label>
+                            <input type="text" id="name" name="name" class="form-input"
+                                   value="{{ user.name }}" required maxlength="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" id="email" name="email" class="form-input"
+                                   value="{{ user.email }}" required maxlength="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Секция аватара -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fas fa-image"></i>
+                        <h3>Аватарны үзгәртү</h3>
+                    </div>
+                    <div class="avatar-upload-section">
+                        <div class="upload-info">
+                            <p>Рәсем форматы: JPG, PNG, GIF (максимум 2MB)</p>
+                            <button type="button" class="upload-btn" onclick="document.getElementById('avatarUpload').click()">
+                                <i class="fas fa-upload"></i>
+                                Рәсемне сайлау
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="form-actions">
+                <button type="submit" class="action-btn primary">
+                    <i class="fas fa-save"></i>
+                    Сакларга
+                </button>
+                <a href="{{ url_for('profile') }}" class="action-btn secondary">
+                    <i class="fas fa-times"></i>
+                    Баш тарту
+                </a>
+                <button type="reset" class="action-btn danger" onclick="resetForm()">
+                    <i class="fas fa-undo"></i>
+                    Кире алу
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 30px;
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.1);
+}
+
+.avatar-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.profile-avatar-big {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.3);
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.avatar-wrapper:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.avatar-edit-btn {
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.profile-username {
+    font-size: 2.5em;
+    margin: 10px 0 5px 0;
+    font-weight: 300;
+}
+
+.profile-subtitle {
+    font-size: 1.1em;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* Flash сообщения */
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.flash-message {
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    animation: slideInDown 0.3s ease-out;
+}
+
+.flash-message.success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.flash-message.error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.profile-form {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+}
+
+.form-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.form-section {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 30px;
+    border-left: 4px solid #667eea;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    color: #2c3e50;
+}
+
+.section-header i {
+    font-size: 1.5em;
+    color: #667eea;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 1.3em;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-size: 0.95em;
+}
+
+.form-input {
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: white;
+    font-family: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input:invalid {
+    border-color: #dc3545;
+}
+
+.form-hint {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.avatar-upload-section {
+    text-align: center;
+}
+
+.upload-info p {
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.upload-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+}
+
+.upload-btn:hover {
+    background: #5a6fd8;
+    transform: translateY(-2px);
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e9ecef;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 16px;
+    min-width: 150px;
+    font-family: inherit;
+}
+
+.action-btn.primary {
+    background: #667eea;
+    color: white;
+}
+
+.action-btn.primary:hover {
+    background: #5a6fd8;
+    transform: translateY(-2px);
+}
+
+.action-btn.secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.action-btn.secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.action-btn.danger {
+    background: #dc3545;
+    color: white;
+}
+
+.action-btn.danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-section {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.form-section:nth-child(1) { animation-delay: 0.1s; }
+.form-section:nth-child(2) { animation-delay: 0.2s; }
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 15px;
+    }
+
+    .profile-header {
+        padding: 30px 20px;
+    }
+
+    .profile-username {
+        font-size: 2em;
+    }
+
+    .profile-form {
+        padding: 25px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .action-btn {
+        min-width: auto;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-container {
+        padding: 10px;
+    }
+
+    .form-section {
+        padding: 20px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+}
+</style>
+
+<!-- Font Awesome для иконок -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+// Предпросмотр аватара
+document.getElementById('avatarUpload').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        // Проверка размера файла (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Файл бик зур. Максимум 2MB.');
+            this.value = '';
+            return;
+        }
+
+        // Проверка типа файла
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Файл форматы дөрес түгел. Рәсем файлы гына (.jpg, .png, .gif).');
+            this.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('avatarPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+
+// Валидация формы
+document.querySelector('.profile-form').addEventListener('submit', function(event) {
+    const username = document.getElementById('username').value.trim();
+    const name = document.getElementById('name').value.trim();
+    const surname = document.getElementById('surname').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    // Базовая валидация
+    if (!username || !name || !surname || !email) {
+        event.preventDefault();
+        alert('Барлык мәҗбүри кырларны тутырыгыз.');
+        return;
+    }
+
+    if (username.length < 3) {
+        event.preventDefault();
+        alert('Логин 3 символдан кыска булмасын.');
+        return;
+    }
+
+    // Email валидация
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        event.preventDefault();
+        alert('Дөрес email адресын кертегез.');
+        return;
+    }
+
+    // Показываем индикатор загрузки
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Саклана...';
+    submitBtn.disabled = true;
+});
+
+// Сброс формы
+function resetForm() {
+    if (confirm('Сез чыныгыз да барлык үзгәрешләрне бетерәсезме?')) {
+        document.querySelector('.profile-form').reset();
+        // Восстанавливаем оригинальный аватар
+        const originalAvatar = "{% if user.avatar %}{{ url_for('static', filename='upload/' + user.avatar) }}{% else %}{{ url_for('static', filename='upload/default_avatar.png') }}{% endif %}";
+        document.getElementById('avatarPreview').src = originalAvatar;
+    }
+}
+
+// Анимация появления
+document.addEventListener('DOMContentLoaded', function() {
+    const formSections = document.querySelectorAll('.form-section');
+
+    formSections.forEach((section, index) => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+
+        setTimeout(() => {
+            section.style.transition = 'all 0.6s ease';
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+
+    // Автоматическое скрытие flash сообщений через 5 секунд
+    setTimeout(() => {
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach(message => {
+            message.style.transition = 'opacity 0.5s ease';
+            message.style.opacity = '0';
+            setTimeout(() => message.remove(), 500);
+        });
+    }, 5000);
+});
+</script>
+{% endblock %}

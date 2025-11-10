@@ -15,6 +15,7 @@ import requests
 load_dotenv()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
+app.config['UPLOAD_FOLDER'] = 'static/upload'
 app.secret_key = os.getenv('FLASK_SECRETKEY')
 DEBUG_FROM_ENV = os.getenv('FLASK_DEBUG')
 if DEBUG_FROM_ENV in ('t', '1', 'True', 'y', 'true', 'yes'):
@@ -264,10 +265,7 @@ def submit_test(test_id):
     test = Tests.query.get_or_404(test_id)
     test_data = test.get_test_data()
     user_answers = request.json.get('answers', {})
-
     questions = test_data.get('questions', [])
-
-    # Проверяем что вопросы есть
     if not questions:
         return jsonify({
             'error': 'В тесте нет вопросов',
@@ -306,7 +304,6 @@ def submit_test(test_id):
     if results['total_questions'] > 0:
         results['score'] = (results['correct_answers'] / results['total_questions']) * 100
 
-    # Сохраняем результат если пользователь авторизован
     if flask_login.current_user.is_authenticated:
         try:
             test_result = TestResult(
@@ -320,7 +317,6 @@ def submit_test(test_id):
             db.session.add(test_result)
             db.session.commit()
         except Exception as e:
-            print(f"Ошибка сохранения результата: {e}")
             db.session.rollback()
 
     return jsonify(results)
@@ -411,26 +407,22 @@ def edit_profile():
     user = flask_login.current_user
 
     if request.method == 'POST':
-        # Получение данных из формы
         username = request.form['username']
         name = request.form['name']
         surname = request.form['surname']
         email = request.form['email']
-        status = request.form['status']
         checking = User.query.filter_by(username=username).first()
         user.username = username
         user.name = name
         user.surname = surname
         user.email = email
-        user.status = status
 
-        # Загрузка аватара
         if 'avatar' in request.files:
             file = request.files['avatar']
             if file and file.filename != '':
                 filename = secure_filename(file.filename)
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(file_path)  # Локальное сохранение файла на сервер
+                file.save(file_path)
         try:
             db.session.commit()
             return redirect(url_for('profile'))
@@ -459,6 +451,10 @@ def init_database():
 
 with app.app_context():
     init_database()
+    upload_path = app.config['UPLOAD_FOLDER']
+    if not os.path.exists(upload_path):
+        os.makedirs(upload_path)
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=DEBUG)

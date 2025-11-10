@@ -7,7 +7,11 @@
     <div class="profile-header">
         <div class="profile-avatar-section">
             <div class="avatar-wrapper">
-                <img class="profile-avatar-big" src="{{ url_for('static', filename='img/default_avatar.png') }}" alt="Аватар">
+                {% if user.avatar and user.avatar != 'default_avatar.png' %}
+                    <img class="profile-avatar-big" src="{{ url_for('static', filename='upload/user.avatar') }}" alt="Аватар">
+                {% else %}
+                    <img class="profile-avatar-big" src="{{ url_for('static', filename='img/default_avatar.png') }}" alt="Аватар">
+                {% endif %}
                 <div class="avatar-overlay">
                     <a href="{{ url_for('edit_profile') }}" class="avatar-edit-btn">
                         <i class="fas fa-camera"></i>
