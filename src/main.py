@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, url_for, redirect, jsonify
 from flask_login import login_required, UserMixin, LoginManager, login_user
 import flask_login
-from models import db, User, Tests, TestResult
+from .models import db, User, Tests, TestResult
 from werkzeug.utils import secure_filename
 import requests
 
