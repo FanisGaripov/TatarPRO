@@ -4,12 +4,15 @@ import random
 import xml.etree.ElementTree as ET
 
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, url_for, redirect, jsonify
+from flask import Flask, render_template, request, url_for, redirect, jsonify, session
 from flask_login import login_required, UserMixin, LoginManager, login_user
 import flask_login
-from .models import db, User, Tests, TestResult
+from apscheduler.schedulers.background import BackgroundScheduler
+
+from src.models import db, User, Tests, TestResult
 from werkzeug.utils import secure_filename
 import requests
+from src.fixtures import add_sample_tests
 
 
 load_dotenv()
@@ -23,6 +26,17 @@ if DEBUG_FROM_ENV in ('t', '1', 'True', 'y', 'true', 'yes'):
 login_manager = LoginManager()
 login_manager.init_app(app)
 db.init_app(app)
+random_phrase_num = 0
+
+
+def scheduled_task():
+    global random_phrase_num
+    random_phrase_num = random.randint(0, len(phrases) - 1)
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(scheduled_task, 'interval', hours=24)
+scheduler.start()
 
 
 @app.route('/')
@@ -57,13 +71,14 @@ def gde_uchit_tatarskiy():
 
 @app.route('/day-phrase')
 def day_phrase():
-    phrases = ['Сәлам', 'Исәнмесез', 'Хәлләрегез ничек?', 'Рәхмәт', 'Сау булыгыз']
-    phrases_translates = ['Привет', 'Здравствуйте', 'Как Ваши дела?', 'Спасибо', 'До свидания']
-    random_phrase = random.randint(0, len(phrases) - 1)
+    global random_phrase_num
+    with open('static/others/tatar_eitemnare.txt', 'r', encoding='utf8') as f:
+        file = f.read()
+        phrases = file.split('\n')
     return render_template(
         'pages/day_phrase.html',
-        phrase=phrases[random_phrase],
-        translate=phrases_translates[random_phrase]
+        phrase=phrases[random_phrase_num],
+        # translate=phrases_translates[random_phrase]
     )
 
 
@@ -104,122 +119,30 @@ def translate_tatar_api(lang, text):
 
 
 @app.route('/syzlek')
-def vocabulary_page():
-    return render_template('pages/vocabulary_language_select.html')
-
-
-@app.route('/syzlek/ru_to_tat/<word>')
-def vocabulary_ru_to_tat(word):
-    if word:
+@app.route('/syzlek/<lang>/<word>')
+def vocabulary_page(lang=None, word=None):
+    if word and lang == 'ru_to_tat':
         result = translate_tatar_api(0, word)
         return render_template('pages/vocabulary.html', result=result)
-    else:
-        return render_template('pages/vocabulary.html')
-
-
-@app.route('/syzlek/tat_to_ru/<word>')
-def vocabulary_tat_to_ru(word):
-    if word:
+    elif word and lang == 'tat_to_ru':
         result = translate_tatar_api(1, word)
         return render_template('pages/vocabulary.html', result=result)
-    else:
-        return render_template('pages/vocabulary.html')
+    return render_template('pages/vocabulary.html')
 
 
-def add_sample_tests():
-    """Добавление примеров тестов"""
+@app.route('/grammar')
+def grammar():
+    return render_template('pages/grammar.html')
 
-    # Тест 1: Базовый словарный запас
-    test1_data = {
-        "questions": [
-            {
-                "id": 1,
-                "question": "Как переводится 'әни'?",
-                "options": ["Отец", "Мать", "Брат", "Сестра"],
-                "correct_answer": 1,
-                "explanation": "Әни - мать на татарском языке"
-            },
-            {
-                "id": 2,
-                "question": "Выберите правильный перевод слова 'китап'",
-                "options": ["Ручка", "Книга", "Стол", "Окно"],
-                "correct_answer": 1,
-                "explanation": "Китап - книга на татарском языке"
-            },
-            {
-                "id": 3,
-                "question": "Что означает 'рәхмәт'?",
-                "options": ["Пожалуйста", "Спасибо", "Извините", "До свидания"],
-                "correct_answer": 1,
-                "explanation": "Рәхмәт - спасибо на татарском языке"
-            }
-        ]
-    }
 
-    test1 = Tests(
-        title="Базовый словарный запас",
-        description="Основные слова татарского языка для начинающих"
-    )
-    test1.set_test_data(test1_data)
+@app.route('/syntax')
+def syntax():
+    return render_template('pages/syntax.html')
 
-    # Тест 2: Грамматика
-    test2_data = {
-        "questions": [
-            {
-                "id": 1,
-                "question": "Выберите правильную форму: 'Мин ... барам' (я иду домой)",
-                "options": ["өйгә", "өйдә", "өйдән", "өй"],
-                "correct_answer": 0,
-                "explanation": "Правильная форма - 'өйгә' (направление движения)"
-            },
-            {
-                "id": 2,
-                "question": "Завершите предложение: 'Ул ... яза' (Он пишет письмо)",
-                "options": ["хатны", "хатта", "хат", "хатка"],
-                "correct_answer": 2,
-                "explanation": "Прямое дополнение в татарском языке стоит в основном падеже"
-            }
-        ]
-    }
 
-    test2 = Tests(
-        title="Основы грамматики",
-        description="Базовые грамматические правила татарского языка"
-    )
-    test2.set_test_data(test2_data)
-
-    # Тест 3: Разговорные фразы
-    test3_data = {
-        "questions": [
-            {
-                "id": 1,
-                "question": "Как поздороваться утром?",
-                "options": ["Хәерле иртә!", "Хәерле кич!", "Хәерле көн!", "Сәлам!"],
-                "correct_answer": 0,
-                "explanation": "Хәерле иртә! - Доброе утро!"
-            },
-            {
-                "id": 2,
-                "question": "Как спросить 'Как дела?'",
-                "options": ["Ничек яшисез?", "Нинди яшисез?", "Кая яшисез?", "Кем яшисез?"],
-                "correct_answer": 0,
-                "explanation": "Ничек яшисез? - Как поживаете?"
-            }
-        ]
-    }
-
-    test3 = Tests(
-        title="Разговорные фразы",
-        description="Основные фразы для повседневного общения"
-    )
-    test3.set_test_data(test3_data)
-
-    db.session.add(test1)
-    db.session.add(test2)
-    db.session.add(test3)
-    db.session.commit()
-
-    print("Тестовые данные добавлены!")
+@app.route('/speaking')
+def speaking():
+    return render_template('pages/speaking.html')
 
 
 @app.route('/tests')
@@ -228,27 +151,71 @@ def tests_page():
     return render_template('pages/tests.html', tests=tests)
 
 
+def creating_new_question(question, options, correct_answer, explanation):
+    if 'current_test' not in session:
+        session['current_test'] = {'questions': []}
+    new_question = {
+        'id': len(session['current_test']['questions']) + 1,
+        'question': question,
+        "options": options,
+        'correct_answer': correct_answer,
+        'explanation': explanation,
+    }
+    session['current_test']['questions'].append(new_question)
+    session.modified = True
+
+
+
 @app.route('/create-test', methods=['GET', 'POST'])
 def create_tests():
-    # test3_data = {
-    #     "questions": [
-    #         {
-    #             "id": 1,
-    #             "question": "Как поздороваться утром?",
-    #             "options": ["Хәерле иртә!", "Хәерле кич!", "Хәерле көн!", "Сәлам!"],
-    #             "correct_answer": 0,
-    #             "explanation": "Хәерле иртә! - Доброе утро!"
-    #         },
-    #         {
-    #             "id": 2,
-    #             "question": "Как спросить 'Как дела?'",
-    #             "options": ["Ничек яшисез?", "Нинди яшисез?", "Кая яшисез?", "Кем яшисез?"],
-    #             "correct_answer": 0,
-    #             "explanation": "Ничек яшисез? - Как поживаете?"
-    #         }
-    #     ]
-    # }
-    return render_template('pages/create_tests.html')
+    if request.method == 'POST' and 'save_test' not in request.form and 'clear_form' not in request.form:
+        question = request.form.get('question')
+        options0 = request.form.get('option0')
+        options1 = request.form.get('option1')
+        options2 = request.form.get('option2')
+        options3 = request.form.get('option3')
+        options = [options0, options1, options2, options3]
+        correct_answer = request.form.get('correct_answer')
+        if correct_answer:
+            correct_answer = int(correct_answer)
+        explanation = request.form.get('explanation', '')
+        creating_new_question(question, options, correct_answer, explanation)
+        return redirect(url_for('create_tests'))
+    elif request.method == 'POST' and 'save_test' in request.form and 'clear_form' not in request.form:
+        question = request.form.get('question')
+        options0 = request.form.get('option0')
+        options1 = request.form.get('option1')
+        options2 = request.form.get('option2')
+        options3 = request.form.get('option3')
+        options = [options0, options1, options2, options3]
+        correct_answer = request.form.get('correct_answer')
+        if correct_answer:
+            correct_answer = int(correct_answer)
+        explanation = request.form.get('explanation', '')
+        if question:
+            creating_new_question(question, options, correct_answer, explanation)
+        test_data = {"questions": session['current_test']['questions']}
+        test = Tests(
+            title="Новый тест",
+            description='Яңа тест'
+        )
+        test.set_test_data(test_data)
+        db.session.add(test)
+        db.session.commit()
+        session.pop('current_test', None)
+        session.modified = True
+        return redirect(url_for('tests_page'))
+    elif 'clear_form' in request.form:
+        session.pop('current_test', None)
+        session.modified = True
+    if 'current_test' in session:
+        return render_template('pages/create_tests.html', questions=session['current_test']['questions'])
+    else:
+        return render_template('pages/create_tests.html', questions=[])
+
+
+def delete_tests():
+    pass
 
 
 @app.route('/tests/<int:test_id>')
@@ -320,6 +287,11 @@ def submit_test(test_id):
             db.session.rollback()
 
     return jsonify(results)
+
+
+@app.route('/yoobilyar_edipler')
+def yoobilyar_edipler():
+    return render_template('yoobilyar_edipler.html')
 
 
 @app.route('/change_lang_to_ru')

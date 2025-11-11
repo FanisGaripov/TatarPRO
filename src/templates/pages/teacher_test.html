@@ -21,11 +21,11 @@
 </style>
 <body>
     <div class="container py-4">
-        <h1 class="text-center mb-4">
-            {% if test %}
-                id: {{ test.id }}
-            {% endif %}
-        </h1>
+        {% if test %}
+        <h2 class="text-center mb-4">Тестның исеме: {{ test.title }}</h2>
+        <h4 class="text-center mb-4">Тест турында: {{ test.description }}</h4>
+        <h4 class="text-center mb-4">ID: {{ test.id }}</h4>
+        {% endif %}
 
         <form id="testForm">
             {% for question in questions %}

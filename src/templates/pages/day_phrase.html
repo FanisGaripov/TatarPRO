@@ -4,5 +4,53 @@
 {% block description %}Көн фразасы{% endblock %}
 
 {% block content %}
-{{ phrase }} - {{ translate }}
+<div class="container">
+    <h2 class="text-center mb-4">Көн әйтеме</h2>
+<div class="quote-of-the-day">
+    <div class="quote-icon">“</div>
+    <div class="quote-content">
+        <p class="quote-text">{{ phrase }}</p>
+<!--    <p class="quote-translation">Хорошего дня и продуктивной работы!</p>-->
+    </div>
+</div>
+</div>
+
+<style>
+.quote-of-the-day {
+    display: flex;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin: 20px 0;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.quote-icon {
+    font-size: 80px;
+    color: rgba(255,255,255,0.3);
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-family: serif;
+}
+
+.quote-content {
+    margin-left: 60px;
+}
+
+.quote-text {
+    font-size: 1.4em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.quote-translation {
+    font-size: 1em;
+    opacity: 0.9;
+    font-style: italic;
+}
+</style>
 {% endblock %}

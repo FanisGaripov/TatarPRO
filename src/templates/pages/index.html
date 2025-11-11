@@ -1,15 +1,11 @@
-<!DOCTYPE html>
 {% extends "base.html" %}
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    {% block title %}Төп бит{% endblock %}
-    {% block description %}Татар телен өйрәнүнең заманча платформасы - сүзлек, тестлар, грамматика, әдәбият{% endblock %}
-</head>
+
+{% block title %}Төп бит{% endblock %}
+
+{% block description %}Татар телен өйрәнүнең заманча платформасы - сүзлек, тестлар, грамматика, әдәбият{% endblock %}
+
 {% block content %}
-<!-- Main Content -->
 <div class="main-content sidebar-collapsed" id="mainContent">
-    <!-- Hero Section -->
     <div class="row mb-5">
         <div class="col-12">
             <div class="card border-0 shadow-lg overflow-hidden">
@@ -17,8 +13,8 @@
                     <div class="col-md-6 d-flex align-items-center">
                         <div class="card-body p-4 p-lg-5">
                             <h1 class="display-6 fw-bold text-primary mb-3">ТатарPRO</h1>
-                            <p class="lead mb-4">Татар телен һәм мәдәниятен өйрәнүнең яңа заманча юлы.
-                                Тизрәк безгә кушылыгыз! Татар телен бергә өйрәниек!</p>
+                            <p class="lead mb-4">Татар телен, әдәбиятын һәм мәдәниятен өйрәнүнең яңа заманча юлы.
+                                Бердәмлектә көч! Безгә кушылыгыз! Татар телен бергә өйрәник!</p>
                             <div class="d-flex gap-2">
                                 <button class="btn btn-primary btn-lg px-4">Башлау</button>
                                 <button class="btn btn-outline-primary btn-lg px-4">Проект турында</button>
@@ -42,7 +38,6 @@
         </div>
     </div>
 
-    <!-- Features Grid -->
     <div class="row mb-5">
         <div class="col-12">
             <h2 class="text-center mb-4">Нинди функцияләр бар?</h2>
@@ -69,7 +64,46 @@
                     </div>
                     <h5 class="card-title fw-bold">Грамматика</h5>
                     <p class="card-text text-muted">Тел кагыйдәләрен өйрәнү өчен төрле таблицалар, аңлатмалар, мисаллар.</p>
-                    <a href="#" class="btn btn-outline-success mt-auto">Өйрәнү</a>
+                    <a href="{{ url_for('grammar') }}" class="btn btn-outline-success mt-auto">Өйрәнү</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-danger bg-opacity-10 text-danger rounded-circle mx-auto mb-3">
+                        <i class="bi bi-check2 fs-2"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Синтаксис</h5>
+                    <p class="card-text text-muted">Татар әдәбияты һәм мәдәни мирасы белән танышу.</p>
+                    <a href="{{ url_for('syntax') }}" class="btn btn-outline-info mt-auto">Өйрәнү</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle mx-auto mb-3">
+                        <i class="bi bi-mic fs-2"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Сөйләм</h5>
+                    <p class="card-text text-muted">Татар әдәбияты һәм мәдәни мирасы белән танышу.</p>
+                    <a href="{{ url_for('speaking') }}" class="btn btn-outline-info mt-auto">Өйрәнү</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle mx-auto mb-3">
+                        <i class="bi bi-book fs-2"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Әдәбият теориясе</h5>
+                    <p class="card-text text-muted">Татар әдәбияты һәм мәдәни мирасы белән танышу.</p>
+                    <a href="#" class="btn btn-outline-info mt-auto">Танышу</a>
                 </div>
             </div>
         </div>
@@ -93,7 +127,7 @@
                     <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle mx-auto mb-3">
                         <i class="bi bi-music-note-beamed fs-2"></i>
                     </div>
-                    <h5 class="card-title fw-bold">Сәнгать</h5>
+                    <h5 class="card-title fw-bold">Әсәрләр</h5>
                     <p class="card-text text-muted">Татар әдәбияты һәм мәдәни мирасы белән танышу.</p>
                     <a href="#" class="btn btn-outline-info mt-auto">Танышу</a>
                 </div>
