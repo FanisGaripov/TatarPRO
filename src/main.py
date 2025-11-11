@@ -5,10 +5,11 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, url_for, redirect, jsonify, session
+from flask import Flask, render_template, request, url_for, redirect, jsonify, session, Response, stream_with_context
 from flask_login import login_required, UserMixin, LoginManager, login_user
 import flask_login
 from apscheduler.schedulers.background import BackgroundScheduler
+import g4f
 
 from src.models import db, User, Tests, TestResult
 from werkzeug.utils import secure_filename
@@ -121,16 +122,18 @@ def translate_tatar_api(lang, text):
         return None
 
 
-@app.route('/syzlek')
-@app.route('/syzlek/<lang>/<word>')
+@app.route('/syzlek', methods=['GET', 'POST'])
 def vocabulary_page(lang=None, word=None):
-    if word and lang == 'ru_to_tat':
-        result = translate_tatar_api(0, word)
-        return render_template('pages/vocabulary.html', result=result)
-    elif word and lang == 'tat_to_ru':
-        result = translate_tatar_api(1, word)
-        return render_template('pages/vocabulary.html', result=result)
-    return render_template('pages/vocabulary.html')
+    if request.method == 'POST':
+        word = request.form.get('word')
+        lang = request.form.get('lang')
+        if word and lang == 'ru_to_tat':
+            result = translate_tatar_api(0, word)
+            return render_template('pages/vocabulary.html', result=result)
+        elif word and lang == 'tat_to_ru':
+            result = translate_tatar_api(1, word)
+            return render_template('pages/vocabulary.html', result=result)
+    return render_template('pages/vocabulary.html', result=None)
 
 
 @app.route('/grammar')
@@ -294,7 +297,7 @@ def submit_test(test_id):
 
 @app.route('/yoobilyar_edipler')
 def yoobilyar_edipler():
-    return render_template('yoobilyar_edipler.html')
+    return render_template('pages/yoobilyar_edipler.html')
 
 
 @app.route('/change_lang_to_ru')
@@ -305,6 +308,40 @@ def change_language_to_rus():
 @app.route('/change_lang_to_tat')
 def change_language_to_tat():
     return 'tat'
+
+
+@app.route('/ai', methods=['GET', 'POST'])
+def ai():
+    # страница с чат-ботом
+    return render_template('pages/ai.html')
+
+
+@app.route('/stream')
+def stream():
+    question = request.args.get('question')
+    response = ask_physics_question(question)
+    return Response(stream_with_context(response_stream(response)), content_type='text/event-stream')
+
+
+def response_stream(response):
+    for chunk in response:
+        if isinstance(chunk, str):
+            yield f"data: {chunk}\n\n"
+
+
+def ask_physics_question(question):
+    try:
+        response = g4f.ChatCompletion.create(
+            model="gpt-4",  # Модель ИИ
+            messages=[{"role": "system", "content": "Ты помощник, который отвечает только на вопросы по татарскому языку и татарской литературе. Старайся отвечать только на татарском языке, если с тобой говорят по-татарски."},
+                      {"role": "user", "content": question}],
+            stream=True  # Включаем потоковый вывод
+        )
+        for chunk in response:
+            if isinstance(chunk, str):
+                yield chunk
+    except Exception as e:
+        yield f"Произошла ошибка: {e}"
 
 
 @app.errorhandler(404)

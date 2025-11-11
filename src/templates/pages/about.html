@@ -1,8 +1,152 @@
 {% extends "base.html" %}
 
-{% block title %}Проект турында{% endblock %}
-{% block description %}Проект турында берничә җөмлә{% endblock %}
+{% block title %}Проект турында - ТатарPRO{% endblock %}
+{% block description %}ТатарPRO - беренче онлайн татар теле өйрәнү платформасы. Татар теленең грамматикасы, сүзлеге, әдәбияты һәм тестлары.{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Заголовок и основная информация -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 text-primary mb-3">ТатарPRO турында</h1>
+                <p class="lead">Яңа технологияләр ярдәмендә татар телен өйрәнү</p>
+            </div>
 
+            <!-- Основной контент -->
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- Карточка о проекте -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <h3 class="card-title text-primary mb-3">Безнең миссия</h3>
+                            <p class="card-text fs-5">
+                                <strong>ТатарPRO</strong> - татар телен онлайн өйрәнү өчен ясалган инновацион платформа.
+                            </p>
+
+                            <div class="mt-4">
+                                <h5 class="text-success">Беренчелек</h5>
+                                <p class="card-text">
+                                    <strong>Без - татар телендә эшләүче беренче онлайн платформа!</strong>
+                                    Безнең проект татар теле өйрәнүен яңа дәрәҗәгә күтәрә.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Особенности -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <h3 class="card-title text-primary mb-3">Мөмкинлекләр</h3>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-book text-primary fs-4 me-3"></i>
+                                        <div>
+                                            <h6>Сүзлек</h6>
+                                            <p class="small mb-0">Татарча-русча, русча-татарча онлайн сүзлек</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-pencil-square text-primary fs-4 me-3"></i>
+                                        <div>
+                                            <h6>Грамматика</h6>
+                                            <p class="small mb-0">Тел грамматикасын аңлату һәм куллану</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-check-circle text-primary fs-4 me-3"></i>
+                                        <div>
+                                            <h6>Тестлар</h6>
+                                            <p class="small mb-0">Билгелелекне тикшерү өчен төрле тестлар</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-mic text-primary fs-4 me-3"></i>
+                                        <div>
+                                            <h6>Сөйләм</h6>
+                                            <p class="small mb-0">Сөйләм телен үстерү алымнары</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Почему мы первые -->
+                    <div class="card shadow-sm border-success mb-4">
+                        <div class="card-body p-4">
+                            <h3 class="card-title text-success mb-3">Ни өчен без беренче?</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <strong>Тулы интеграция:</strong> Грамматика, сүзлек, тестлар - барысы да бер урында
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <strong>Технологик яңалык:</strong> Яңа веб-технологияләр кулланылу
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <strong>Мобильлек:</strong> Барлык корылмаларда эшләү мөмкинлеге
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <strong>Үсеш:</strong> Яңа мөмкинлекләр өстәү даими дәвам итә
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light border-0 text-center">
+                        <div class="card-body py-5">
+                            <h4 class="card-title mb-3">Безгә кушылыгыз!</h4>
+                            <p class="card-text mb-4">
+                                Татар телен, әдәбиятын һәм мәдәниятен өйрәнүнең яңа заманча юлы. Бердәмлектә көч! Татар телен бергә өйрәник!
+                            </p>
+                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-book me-2"></i>Төп биткә күчәргә
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+
+    .display-4 {
+        font-weight: 300;
+    }
+
+    .lead {
+        font-size: 1.3rem;
+        color: #6c757d;
+    }
+
+    .list-unstyled li {
+        padding: 8px 0;
+        border-bottom: 1px solid #f8f9fa;
+    }
+
+    .list-unstyled li:last-child {
+        border-bottom: none;
+    }
+</style>
 {% endblock %}
