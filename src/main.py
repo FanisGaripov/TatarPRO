@@ -2,6 +2,7 @@ import http
 import os
 import random
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, url_for, redirect, jsonify, session
@@ -31,7 +32,7 @@ random_phrase_num = 0
 
 def scheduled_task():
     global random_phrase_num
-    random_phrase_num = random.randint(0, len(phrases) - 1)
+    random_phrase_num = random.randint(0, 499)
 
 
 scheduler = BackgroundScheduler()
@@ -72,7 +73,9 @@ def gde_uchit_tatarskiy():
 @app.route('/day-phrase')
 def day_phrase():
     global random_phrase_num
-    with open('static/others/tatar_eitemnare.txt', 'r', encoding='utf8') as f:
+    current_dir = Path(__file__).parent
+    file_path = current_dir / 'static' / 'others' / 'tatar_eitemnare.txt'
+    with open(file_path, 'r', encoding='utf8') as f:
         file = f.read()
         phrases = file.split('\n')
     return render_template(
