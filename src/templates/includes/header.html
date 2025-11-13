@@ -194,7 +194,7 @@
             <div class="p-2 flex-grow-1">
                 <div class="menu-section">
                     <h6 class="text-muted text-uppercase small px-3 mt-3 mb-1">Ясалма интеллект</h6>
-                    <a class="nav-link" href="{{ url_for('vocabulary_page') }}">
+                    <a class="nav-link" href="{{ url_for('ai') }}">
                         <i class="bi bi-robot me-2"></i>
                         <span class="nav-link-text">AI ярдәмче</span>
                     </a>
@@ -297,8 +297,8 @@
 
 
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="{{ url_for('change_language_to_tat') }}" class="nav-link px-2 link-dark"><img style="margin-right: 3px;" src="{{ url_for('static', filename='img/tatar-icon.png') }}"> Тат</a></li>
-                <li><a href="{{ url_for('change_language_to_rus') }}" class="nav-link px-2 link-dark"><img style="margin-right: 3px;" src="{{ url_for('static', filename='img/russia-icon.png') }}"> Рус</a></li>
+                <li><a href="{{ url_for('language_tat') }}" class="nav-link px-2 link-dark"><img style="margin-right: 3px;" src="{{ url_for('static', filename='img/tatar-icon.png') }}"> Тат</a></li>
+                <li><a href="{{ url_for('language_ru') }}" class="nav-link px-2 link-dark"><img style="margin-right: 3px;" src="{{ url_for('static', filename='img/russia-icon.png') }}"> Рус</a></li>
                 <li><a href="{{ url_for('index') }}" class="nav-link px-2 link-dark">Төп бит</a></li>
                 <li><a href="{{ url_for('about') }}" class="nav-link px-2 link-dark">Проект турында</a></li>
                 <li><a href="{{ url_for('tests_page') }}" class="nav-link px-2 link-dark">Тестлар</a></li>

@@ -3,6 +3,7 @@ import os
 import random
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from datetime import datetime
 
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, url_for, redirect, jsonify, session, Response, stream_with_context
@@ -33,6 +34,8 @@ random_phrase_num = 0
 
 def scheduled_task():
     global random_phrase_num
+    today = datetime.now().strftime("%Y%m%d")
+    random.seed(today)
     random_phrase_num = random.randint(0, 499)
 
 
@@ -139,6 +142,14 @@ def vocabulary_page(lang=None, word=None):
 @app.route('/grammar')
 def grammar():
     return render_template('pages/grammar.html')
+
+
+@app.route('/grammar/<theme>')
+def grammar_theme(theme):
+    if theme == 'siyfat':
+        return render_template('pages/siyfat.html')
+    elif theme == 'isem':
+        return render_template('pages/isem.html')
 
 
 @app.route('/syntax')
@@ -300,19 +311,36 @@ def yoobilyar_edipler():
     return render_template('pages/yoobilyar_edipler.html')
 
 
-@app.route('/change_lang_to_ru')
-def change_language_to_rus():
-    return 'ru'
+@app.route('/change_language/ru', methods=['GET', 'POST'])
+def language_ru():
+    if 'page' not in session:
+        session['page'] = '/'
+        session.modified = True
+    if 'language' not in session:
+        session['language'] = 'Ru'
+        session.modified = True
+    session['language'] = 'Ru'
+    session.modified = True
+    print(session['language'])
+    return redirect(session['page'])
 
 
-@app.route('/change_lang_to_tat')
-def change_language_to_tat():
-    return 'tat'
+@app.route('/change_language/tat', methods=['GET', 'POST'])
+def language_tat():
+    if 'page' not in session:
+        session['page'] = '/'
+        session.modified = True
+    if 'language' not in session:
+        session['language'] = 'Ru'
+        session.modified = True
+    session['language'] = 'Tat'
+    session.modified = True
+    print(session['language'])
+    return redirect(session['page'])
 
 
 @app.route('/ai', methods=['GET', 'POST'])
 def ai():
-    # страница с чат-ботом
     return render_template('pages/ai.html')
 
 
@@ -332,10 +360,10 @@ def response_stream(response):
 def ask_physics_question(question):
     try:
         response = g4f.ChatCompletion.create(
-            model="gpt-4",  # Модель ИИ
+            model="gpt-4",
             messages=[{"role": "system", "content": "Ты помощник, который отвечает только на вопросы по татарскому языку и татарской литературе. Старайся отвечать только на татарском языке, если с тобой говорят по-татарски."},
                       {"role": "user", "content": question}],
-            stream=True  # Включаем потоковый вывод
+            stream=True
         )
         for chunk in response:
             if isinstance(chunk, str):

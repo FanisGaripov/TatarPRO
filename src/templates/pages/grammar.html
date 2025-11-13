@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}<title>Грамматика - ТатарPRO</title>{% endblock %}
+{% block description %}<meta name="description" content="Татар теле грамматикасы. Исем, сыйфат, фигыль, килешләр, заманнар һәм башка грамматик кагыйдәләр.">{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Заголовок -->
+            <div class="d-flex align-items-center mb-4">
+                <div class="bg-primary rounded p-3 me-3">
+                    <i class="bi bi-pencil-square text-white fs-4"></i>
+                </div>
+                <div>
+                    <h1 class="h3 mb-1">Грамматика</h1>
+                    <p class="text-muted mb-0">Татар теле грамматикасы</p>
+                </div>
+            </div>
+
+            <!-- Навигация по разделам -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-list-ul me-2"></i>Грамматика бүлекләре
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-primary hover-shadow">
+                                <div class="card-body text-center">
+                                    <div class="bg-primary rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-type text-white fs-2"></i>
+                                    </div>
+                                    <h4 class="card-title text-primary">Исем</h4>
+                                    <p class="card-text text-muted">
+                                        Исемнәрнең килешләре, саннары - менталь карта
+                                    </p>
+                                    <ul class="list-unstyled small text-start text-muted">
+                                        <li><i class="bi bi-check-circle text-success me-2"></i>Ялгызлык һәм уртаклык</li>
+                                        <li><i class="bi bi-check-circle text-success me-2"></i>Берлек һәм күплек сан</li>
+                                        <li><i class="bi bi-check-circle text-success me-2"></i>6 килеш</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer bg-transparent border-0 pb-3">
+                                    <button class="btn btn-primary w-100" onclick="">
+                                        <i class="bi bi-arrow-right-circle me-2"></i>Өйрәнү
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-success hover-shadow">
+                                <div class="card-body text-center">
+                                    <div class="bg-success rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-palette text-white fs-2"></i>
+                                    </div>
+                                    <h4 class="card-title text-success">Сыйфат</h4>
+                                    <p class="card-text text-muted">
+                                        Сыйфатларның дәрәҗәләре, ясалу юллары, сораулары - менталь карта
+                                    </p>
+                                    <ul class="list-unstyled small text-start text-muted">
+                                        <li><i class="bi bi-check-circle text-success me-2"></i>Мөстәкыйль сүз төркеме</li>
+                                        <li><i class="bi bi-check-circle text-success me-2"></i>Дәрәҗәләре</li>
+                                        <li><i class="bi bi-check-circle text-success me-2"></i>Сораулары</li>
+                                        <li><i class="bi bi-check-circle text-success me-2"></i>Җөмләдәге вазыйфалары</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer bg-transparent border-0 pb-3">
+                                    <button class="btn btn-success w-100" onclick="window.location.href='/grammar/siyfat'">
+                                        <i class="bi bi-arrow-right-circle me-2"></i>Өйрәнү
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Будущие разделы (заглушки) -->
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-secondary opacity-50">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-lightning text-secondary fs-1 mb-2"></i>
+                                    <h6 class="card-title">Фигыль</h6>
+                                    <p class="card-text small text-muted">Тискәре өсте</p>
+                                    <button class="btn btn-secondary btn-sm" disabled>Тиздән</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-secondary opacity-50">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-gear text-secondary fs-1 mb-2"></i>
+                                    <h6 class="card-title">Килешләр</h6>
+                                    <p class="card-text small text-muted">Тискәре өсте</p>
+                                    <button class="btn btn-secondary btn-sm" disabled>Тиздән</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-secondary opacity-50">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-clock text-secondary fs-1 mb-2"></i>
+                                    <h6 class="card-title">Заманнар</h6>
+                                    <p class="card-text small text-muted">Тискәре өсте</p>
+                                    <button class="btn btn-secondary btn-sm" disabled>Тиздән</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.bg-primary, .bg-success {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+}
+
+.bg-success {
+    background: linear-gradient(135deg, #198754, #146c43);
+}
+
+.rounded-circle {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}
