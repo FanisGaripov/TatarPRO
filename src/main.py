@@ -46,12 +46,17 @@ scheduler.start()
 
 @app.route('/')
 def index():
-    return render_template('pages/index.html')
+    user = flask_login.current_user
+    tests = Tests.query.all()
+    test_list = [t.id for t in tests]
+    tests_count = len(test_list)
+    return render_template('pages/index.html', user=user, tests_count=tests_count)
 
 
 @app.route('/tatar-classics')
 def tatar_classics():
-    return render_template('pages/tatar_classics.html')
+    user = flask_login.current_user
+    return render_template('pages/tatar_classics.html', user=user)
 
 
 @app.route('/admin')
@@ -61,21 +66,25 @@ def admin_menu():
 
 @app.route('/about')
 def about():
-    return render_template('pages/about.html')
+    user = flask_login.current_user
+    return render_template('pages/about.html', user=user)
 
 
 @app.route('/proforientation')
 def proforientation():
-    return render_template('pages/proforientation.html')
+    user = flask_login.current_user
+    return render_template('pages/proforientation.html', user=user)
 
 
 @app.route('/gde-uchit-tatarskiy')
 def gde_uchit_tatarskiy():
-    return render_template('pages/gde_uchit_tatarskiy.html')
+    user = flask_login.current_user
+    return render_template('pages/gde_uchit_tatarskiy.html', user=user)
 
 
 @app.route('/day-phrase')
 def day_phrase():
+    user = flask_login.current_user
     global random_phrase_num
     current_dir = Path(__file__).parent
     file_path = current_dir / 'static' / 'others' / 'tatar_eitemnare.txt'
@@ -85,6 +94,7 @@ def day_phrase():
     return render_template(
         'pages/day_phrase.html',
         phrase=phrases[random_phrase_num],
+        user=user,
         # translate=phrases_translates[random_phrase]
     )
 
@@ -127,45 +137,51 @@ def translate_tatar_api(lang, text):
 
 @app.route('/syzlek', methods=['GET', 'POST'])
 def vocabulary_page(lang=None, word=None):
+    user = flask_login.current_user
     if request.method == 'POST':
         word = request.form.get('word')
         lang = request.form.get('lang')
         if word and lang == 'ru_to_tat':
             result = translate_tatar_api(0, word)
-            return render_template('pages/vocabulary.html', result=result)
+            return render_template('pages/vocabulary.html', result=result, user=user)
         elif word and lang == 'tat_to_ru':
             result = translate_tatar_api(1, word)
-            return render_template('pages/vocabulary.html', result=result)
-    return render_template('pages/vocabulary.html', result=None)
+            return render_template('pages/vocabulary.html', result=result, user=user)
+    return render_template('pages/vocabulary.html', result=None, user=user)
 
 
 @app.route('/grammar')
 def grammar():
-    return render_template('pages/grammar.html')
+    user = flask_login.current_user
+    return render_template('pages/grammar.html', user=user)
 
 
 @app.route('/grammar/<theme>')
 def grammar_theme(theme):
+    user = flask_login.current_user
     if theme == 'siyfat':
-        return render_template('pages/siyfat.html')
+        return render_template('pages/siyfat.html', user=user)
     elif theme == 'isem':
-        return render_template('pages/isem.html')
+        return render_template('pages/isem.html', user=user)
 
 
 @app.route('/syntax')
 def syntax():
-    return render_template('pages/syntax.html')
+    user = flask_login.current_user
+    return render_template('pages/syntax.html', user=user)
 
 
 @app.route('/speaking')
 def speaking():
-    return render_template('pages/speaking.html')
+    user = flask_login.current_user
+    return render_template('pages/speaking.html', user=user)
 
 
 @app.route('/tests')
 def tests_page():
+    user = flask_login.current_user
     tests = Tests.query.all()
-    return render_template('pages/tests.html', tests=tests)
+    return render_template('pages/tests.html', tests=tests, user=user)
 
 
 def creating_new_question(question, options, correct_answer, explanation):
@@ -185,6 +201,7 @@ def creating_new_question(question, options, correct_answer, explanation):
 
 @app.route('/create-test', methods=['GET', 'POST'])
 def create_tests():
+    user = flask_login.current_user
     if request.method == 'POST' and 'save_test' not in request.form and 'clear_form' not in request.form:
         question = request.form.get('question')
         options0 = request.form.get('option0')
@@ -226,9 +243,9 @@ def create_tests():
         session.pop('current_test', None)
         session.modified = True
     if 'current_test' in session:
-        return render_template('pages/create_tests.html', questions=session['current_test']['questions'])
+        return render_template('pages/create_tests.html', questions=session['current_test']['questions'], user=user)
     else:
-        return render_template('pages/create_tests.html', questions=[])
+        return render_template('pages/create_tests.html', questions=[], user=user)
 
 
 def delete_tests():
@@ -237,11 +254,12 @@ def delete_tests():
 
 @app.route('/tests/<int:test_id>')
 def teacher_test(test_id):
+    user = flask_login.current_user
     test = Tests.query.get_or_404(test_id)
     test_data = test.get_test_data()
     questions = test_data.get('questions', [])
     return render_template('pages/teacher_test.html', test=test,
-                         questions=questions)
+                         questions=questions, user=user)
 
 
 @app.route('/submit-test/<int:test_id>', methods=['POST'])
@@ -306,9 +324,16 @@ def submit_test(test_id):
     return jsonify(results)
 
 
-@app.route('/yoobilyar_edipler')
+@app.route('/yoobilyar-edipler')
 def yoobilyar_edipler():
-    return render_template('pages/yoobilyar_edipler.html')
+    user = flask_login.current_user
+    return render_template('pages/yoobilyar_edipler.html', user=user)
+
+
+@app.route('/tatar-ediplere')
+def tatar_ediplere():
+    user = flask_login.current_user
+    return render_template('pages/tatar_edipleri.html', user=user)
 
 
 @app.route('/change_language/ru', methods=['GET', 'POST'])
@@ -341,7 +366,8 @@ def language_tat():
 
 @app.route('/ai', methods=['GET', 'POST'])
 def ai():
-    return render_template('pages/ai.html')
+    user = flask_login.current_user
+    return render_template('pages/ai.html', user=user)
 
 
 @app.route('/stream')
@@ -435,8 +461,24 @@ def register():
 @app.route('/profile')
 def profile():
     user = flask_login.current_user
+    test_results = TestResult.query.filter_by(user_id=user.id).all()
+    scores = [result.score for result in test_results]
+    if len(scores) > 0:
+        avg_scores = round(sum(scores) / len(scores), 2)
+    else:
+        avg_scores = 0
+    tests = [test.id for test in test_results]
+    tests_count = len(tests)
+    today = datetime.now()
+    days_at_the_site = (today - user.created_at).days
     if user.is_authenticated:
-        return render_template('pages/profile.html', user=user)
+        return render_template(
+            'pages/profile.html',
+            user=user,
+            avg_scores=avg_scores,
+            tests_count=tests_count,
+            days_at_the_site=days_at_the_site,
+        )
     else:
         return redirect(url_for('login'))
 
@@ -463,10 +505,12 @@ def edit_profile():
                 filename = secure_filename(file.filename)
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
+                user.avatar = filename
         try:
             db.session.commit()
             return redirect(url_for('profile'))
         except Exception as e:
+            print(e)
             db.session.rollback()
             return redirect(url_for('edit_profile'))
     return render_template('pages/edit_profile.html', user=user)

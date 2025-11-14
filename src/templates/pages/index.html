@@ -5,173 +5,171 @@
 {% block description %}Татар телен өйрәнүнең заманча платформасы - сүзлек, тестлар, грамматика, әдәбият{% endblock %}
 
 {% block content %}
-<div class="main-content sidebar-collapsed" id="mainContent">
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="card border-0 shadow-lg overflow-hidden">
-                <div class="row g-0">
-                    <div class="col-md-6 d-flex align-items-center">
-                        <div class="card-body p-4 p-lg-5">
-                            <h1 class="display-6 fw-bold text-primary mb-3">ТатарPRO</h1>
-                            <p class="lead mb-4">Татар телен, әдәбиятын һәм мәдәниятен өйрәнүнең яңа заманча юлы.
-                                Бердәмлектә көч! Безгә кушылыгыз! Татар телен бергә өйрәник!</p>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-primary btn-lg px-4">Башлау</button>
-                                <button class="btn btn-outline-primary btn-lg px-4">Проект турында</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative">
-                            <img src="{{ url_for('static', filename='img/main_page_photo.jpg') }}"
-                                 class="img-fluid rounded-end"
-                                 alt="Татарстан Республикасы Президенты мәктәптә укучылар белән">
-                            <div class="position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-50 text-white p-3">
-                                <small>«Мы должны знать язык, тем более язык матери — это святое. Каждый должен знать. Мы же не говорим профессионально, но обиходно. И если ты живешь в республике, если ты знаешь татарский язык, хотя бы обиходно, кому он мешает?»</small>
-                                <br>
-                                <small>Р.Н.Миңнеханов - Татарстан Республикасы Рәисе</small>
-                            </div>
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-lg overflow-hidden">
+            <div class="row g-0">
+                <div class="col-md-6 d-flex align-items-center">
+                    <div class="card-body p-4 p-lg-5">
+                        <h1 class="display-6 fw-bold text-primary mb-3">ТатарPRO</h1>
+                        <p class="lead mb-4">Татар телен, әдәбиятын һәм мәдәниятен өйрәнүнең яңа заманча юлы.
+                            Бердәмлектә көч! Безгә кушылыгыз! Татар телен бергә өйрәник!</p>
+                        <div class="d-flex gap-2">
+                            <button onclick="window.location.href='/login'" class="btn btn-primary btn-lg px-4">Башлау</button>
+                            <button onclick="window.location.href='/about'" class="btn btn-outline-primary btn-lg px-4">Проект турында</button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-5">
-        <div class="col-12">
-            <h2 class="text-center mb-4">Нинди функцияләр бар?</h2>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
-                <div class="card-body text-center p-4">
-                    <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-3">
-                        <i class="bi bi-book fs-2"></i>
-                    </div>
-                    <h5 class="card-title fw-bold">Сүзлек</h5>
-                    <p class="card-text text-muted">Татарча-русча, русча-татарча интерактив сүзлек.</p>
-                    <a href="{{ url_for('vocabulary_page') }}" class="btn btn-outline-primary mt-auto">Керергә</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
-                <div class="card-body text-center p-4">
-                    <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle mx-auto mb-3">
-                        <i class="bi bi-pencil-square fs-2"></i>
-                    </div>
-                    <h5 class="card-title fw-bold">Грамматика</h5>
-                    <p class="card-text text-muted">Тел кагыйдәләрен өйрәнү өчен төрле таблицалар, аңлатмалар, мисаллар.</p>
-                    <a href="{{ url_for('grammar') }}" class="btn btn-outline-success mt-auto">Өйрәнү</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
-                <div class="card-body text-center p-4">
-                    <div class="feature-icon bg-danger bg-opacity-10 text-danger rounded-circle mx-auto mb-3">
-                        <i class="bi bi-check2 fs-2"></i>
-                    </div>
-                    <h5 class="card-title fw-bold">Синтаксис</h5>
-                    <p class="card-text text-muted">Җөмләдә сүзләрнең бәйләнеше.</p>
-                    <a href="{{ url_for('syntax') }}" class="btn btn-outline-info mt-auto">Өйрәнү</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
-                <div class="card-body text-center p-4">
-                    <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle mx-auto mb-3">
-                        <i class="bi bi-mic fs-2"></i>
-                    </div>
-                    <h5 class="card-title fw-bold">Сөйләм</h5>
-                    <p class="card-text text-muted">Дөрес сөйләм кагыйдәләре.</p>
-                    <a href="{{ url_for('speaking') }}" class="btn btn-outline-info mt-auto">Өйрәнү</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
-                <div class="card-body text-center p-4">
-                    <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle mx-auto mb-3">
-                        <i class="bi bi-book fs-2"></i>
-                    </div>
-                    <h5 class="card-title fw-bold">Әдәбият теориясе</h5>
-                    <p class="card-text text-muted">Татар әдәбияты теориясе белән танышу.</p>
-                    <a href="#" class="btn btn-outline-info mt-auto">Танышу</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
-                <div class="card-body text-center p-4">
-                    <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle mx-auto mb-3">
-                        <i class="bi bi-award fs-2"></i>
-                    </div>
-                    <h5 class="card-title fw-bold">Тестлар</h5>
-                    <p class="card-text text-muted">Төрле авырлыктагы тестлар</p>
-                    <a href="{{ url_for('tests_page') }}" class="btn btn-outline-warning mt-auto">Керергә</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
-                <div class="card-body text-center p-4">
-                    <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle mx-auto mb-3">
-                        <i class="bi bi-music-note-beamed fs-2"></i>
-                    </div>
-                    <h5 class="card-title fw-bold">Әсәрләр</h5>
-                    <p class="card-text text-muted">Татар әдәбияты һәм мәдәни мирасы белән танышу.</p>
-                    <a href="#" class="btn btn-outline-info mt-auto">Танышу</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stats Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="card border-0 bg-light">
-                <div class="card-body py-4">
-                    <div class="row text-center">
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="h2 fw-bold text-primary">10000+</div>
-                            <div class="text-muted">Сүз</div>
-                        </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="h2 fw-bold text-success">100+</div>
-                            <div class="text-muted">Тест</div>
-                        </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="h2 fw-bold text-warning">0+</div>
-                            <div class="text-muted">Тема</div>
-                        </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="h2 fw-bold text-info">0+</div>
-                            <div class="text-muted">Кулланучы</div>
+                <div class="col-md-6">
+                    <div class="position-relative">
+                        <img src="{{ url_for('static', filename='img/main_page_photo.jpg') }}"
+                             class="img-fluid rounded-end"
+                             alt="Татарстан Республикасы Президенты мәктәптә укучылар белән">
+                        <div class="position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-50 text-white p-3">
+                            <small>«Мы должны знать язык, тем более язык матери — это святое. Каждый должен знать. Мы же не говорим профессионально, но обиходно. И если ты живешь в республике, если ты знаешь татарский язык, хотя бы обиходно, кому он мешает?»</small>
+                            <br>
+                            <small>Р.Н.Миңнеханов - Татарстан Республикасы Рәисе</small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- CTA Section -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-0 bg-primary text-white">
-                <div class="card-body p-5 text-center">
-                    <h3 class="mb-3">Хәзер үк өйрәнергә телисезме</h3>
-                    <p class="mb-4">Татар телен өйрәнү юлыгызны бүгеннән башлагыз</p>
-                    <button class="btn btn-light btn-lg px-5">Хәзер үк теркәлергә</button>
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">Нинди функцияләр бар?</h2>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-3">
+                    <i class="bi bi-book fs-2"></i>
                 </div>
+                <h5 class="card-title fw-bold">Сүзлек</h5>
+                <p class="card-text text-muted">Татарча-русча, русча-татарча интерактив сүзлек.</p>
+                <a href="{{ url_for('vocabulary_page') }}" class="btn btn-outline-primary mt-auto">Керергә</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle mx-auto mb-3">
+                    <i class="bi bi-pencil-square fs-2"></i>
+                </div>
+                <h5 class="card-title fw-bold">Грамматика</h5>
+                <p class="card-text text-muted">Тел кагыйдәләрен өйрәнү өчен төрле таблицалар, аңлатмалар, мисаллар.</p>
+                <a href="{{ url_for('grammar') }}" class="btn btn-outline-success mt-auto">Өйрәнү</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-danger bg-opacity-10 text-danger rounded-circle mx-auto mb-3">
+                    <i class="bi bi-check2 fs-2"></i>
+                </div>
+                <h5 class="card-title fw-bold">Синтаксис</h5>
+                <p class="card-text text-muted">Җөмләдә сүзләрнең бәйләнеше.</p>
+                <a href="{{ url_for('syntax') }}" class="btn btn-outline-info mt-auto">Өйрәнү</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle mx-auto mb-3">
+                    <i class="bi bi-mic fs-2"></i>
+                </div>
+                <h5 class="card-title fw-bold">Сөйләм</h5>
+                <p class="card-text text-muted">Дөрес сөйләм кагыйдәләре.</p>
+                <a href="{{ url_for('speaking') }}" class="btn btn-outline-info mt-auto">Өйрәнү</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle mx-auto mb-3">
+                    <i class="bi bi-book fs-2"></i>
+                </div>
+                <h5 class="card-title fw-bold">Әдәбият теориясе</h5>
+                <p class="card-text text-muted">Татар әдәбияты теориясе белән танышу.</p>
+                <a href="#" class="btn btn-outline-info mt-auto">Танышу</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle mx-auto mb-3">
+                    <i class="bi bi-award fs-2"></i>
+                </div>
+                <h5 class="card-title fw-bold">Тестлар</h5>
+                <p class="card-text text-muted">Төрле авырлыктагы тестлар</p>
+                <a href="{{ url_for('tests_page') }}" class="btn btn-outline-warning mt-auto">Керергә</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card feature-card h-100 border-0 shadow-sm hover-shadow transition-all">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle mx-auto mb-3">
+                    <i class="bi bi-music-note-beamed fs-2"></i>
+                </div>
+                <h5 class="card-title fw-bold">Әсәрләр</h5>
+                <p class="card-text text-muted">Татар әдәбияты һәм мәдәни мирасы белән танышу.</p>
+                <a href="#" class="btn btn-outline-info mt-auto">Танышу</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 bg-light">
+            <div class="card-body py-4">
+                <div class="row text-center">
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="h2 fw-bold text-primary">10000+</div>
+                        <div class="text-muted">Сүз</div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="h2 fw-bold text-success">{{ tests_count }}+</div>
+                        <div class="text-muted">Тест</div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="h2 fw-bold text-warning">0+</div>
+                        <div class="text-muted">Тема</div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="h2 fw-bold text-info">0+</div>
+                        <div class="text-muted">Кулланучы</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 bg-primary text-white">
+            <div class="card-body p-5 text-center">
+                <h3 class="mb-3">Хәзер үк өйрәнергә телисезме</h3>
+                <p class="mb-4">Татар телен өйрәнү юлыгызны бүгеннән башлагыз</p>
+                <button class="btn btn-light btn-lg px-5">Хәзер үк теркәлергә</button>
             </div>
         </div>
     </div>

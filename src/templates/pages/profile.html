@@ -8,7 +8,7 @@
         <div class="profile-avatar-section">
             <div class="avatar-wrapper">
                 {% if user.avatar and user.avatar != 'default_avatar.png' %}
-                    <img class="profile-avatar-big" src="{{ url_for('static', filename='upload/user.avatar') }}" alt="Аватар">
+                    <img class="profile-avatar-big" src="{{ url_for('static', filename='upload/' + user.avatar) }}" alt="Аватар">
                 {% else %}
                     <img class="profile-avatar-big" src="{{ url_for('static', filename='img/default_avatar.png') }}" alt="Аватар">
                 {% endif %}
@@ -26,15 +26,15 @@
     <div class="profile-content">
         <div class="profile-stats">
             <div class="stat-card">
-                <div class="stat-number">12</div>
+                <div class="stat-number">{{ tests_count }}</div>
                 <div class="stat-label">Тестлар</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">85%</div>
+                <div class="stat-number">{{ avg_scores }}%</div>
                 <div class="stat-label">Уртача нәтиҗә</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">3</div>
+                <div class="stat-number">{{ days_at_the_site }}</div>
                 <div class="stat-label">Көн сайтта</div>
             </div>
         </div>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="info-item">
                         <span class="info-label">Теркәлгән вакыт:</span>
-                        <span class="info-value">{{ user.created_at.strftime('%d.%m.%Y') if user.created_at else 'Юк' }}</span>
+                        <span class="info-value">{{ user.created_at.strftime('%d.%m.%Y') }}</span>
                     </div>
                 </div>
             </div>

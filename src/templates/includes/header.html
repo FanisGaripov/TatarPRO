@@ -1,175 +1,194 @@
 <style>
+    .sidebar {
+        height: 100%;
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+        position: fixed;
+        overflow-y: auto;
+        left: 0;
+        z-index: 1000;
+        width: 280px;
+        max-width: 280px;
+    }
+    .sidebar.collapsed {
+        width: 125px;
+    }
+
+    .flex-column {
+        display: block;
+    }
+    .sidebar.collapsed .nav-link-text,
+    .sidebar.collapsed .full-logo,
+    .sidebar.collapsed .profile-info {
+        display: none;
+    }
+
+    .sidebar.collapsed .small-logo {
+        display: block !important;
+    }
+
+    .sidebar.collapsed .menu-section span {
+        display: none;
+    }
+
+    .sidebar.collapsed .nav-link {
+        text-align: center;
+        padding: 0.75rem 0.5rem;
+        justify-content: center;
+    }
+    .sidebar.collapsed .nav-link i {
+        margin-right: 0;
+    }
+    .sidebar.collapsed .sidebar-header {
+        padding: 1rem 0.5rem;
+        text-align: center;
+        justify-content: center;
+    }
+    .sidebar .nav-link {
+        color: #333;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        margin: 0.125rem 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+    .sidebar .nav-link:hover {
+        background-color: #e9ecef;
+    }
+    .sidebar .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .main-content {
+        padding: 20px;
+        transition: all 0.3s ease;
+        margin-left: 280px;
+        width: calc(100% - 280px);
+        box-sizing: border-box;
+        min-width: 300px; /* Минимальная ширина контента */
+    }
+    .main-content.sidebar-collapsed {
+        margin-left: 125px;
+        width: calc(100% - 125px);
+    }
+    .toggle-btn,
+    .mobile-menu-btn {
+        border: none;
+        background: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+    }
+    .toggle-btn:hover,
+    .mobile-menu-btn:hover, {
+        background-color: #e9ecef;
+    }
+
+    /* Mobile styles */
+    @media (max-width: 768px) {
         .sidebar {
-            min-height: calc(100vh - 76px);
-            background-color: #f8f9fa;
-            border-right: 1px solid #dee2e6;
-            transition: all 0.3s ease;
-            position: fixed;
-            left: 0;
-            z-index: 1000;
+            transform: translateX(-100%);
             width: 280px;
         }
-        .sidebar.collapsed {
-            width: 125px;
+        .sidebar.mobile-open {
+            transform: translateX(0);
         }
-        .sidebar.collapsed .nav-link-text,
-        .sidebar.collapsed .full-logo,
-        .sidebar.collapsed .profile-info {
-            display: none;
-        }
-
-        .sidebar.collapsed .small-logo {
-            display: block !important;
-        }
-
-        .sidebar.collapsed .menu-section span {
-            display: none;
-        }
-
-        .sidebar.collapsed .nav-link {
-            text-align: center;
-            padding: 0.75rem 0.5rem;
-            justify-content: center;
-        }
-        .sidebar.collapsed .nav-link i {
-            margin-right: 0;
-        }
-        .sidebar.collapsed .sidebar-header {
-            padding: 1rem 0.5rem;
-            text-align: center;
-            justify-content: center;
-        }
-        .sidebar .nav-link {
-            color: #333;
-            padding: 0.75rem 1rem;
-            border-radius: 0.375rem;
-            margin: 0.125rem 0.5rem;
-            white-space: nowrap;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
-        .sidebar .nav-link:hover {
-            background-color: #e9ecef;
-        }
-        .sidebar .nav-link.active {
-            background-color: #0d6efd;
-            color: white;
+        .sidebar {
+            width: 280px;
         }
         .main-content {
-            padding: 20px;
-            transition: all 0.3s ease;
-            margin-left: 280px;
+            margin-left: 0 !important;
+            width: 100% !important;
         }
-        .main-content.sidebar-collapsed {
-            margin-left: 125px;
-        }
-        .toggle-btn,
         .mobile-menu-btn {
-            border: none;
-            background: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 0.375rem;
+            display: block !important;
         }
-        .toggle-btn:hover,
-        .mobile-menu-btn:hover, {
-            background-color: #e9ecef;
-        }
-
-        /* Mobile styles */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-            }
-            .sidebar.mobile-open {
-                transform: translateX(0);
-            }
-            .sidebar {
-                width: 280px;
-            }
-            .main-content {
-                margin-left: 0 !important;
-            }
-            .mobile-menu-btn {
-                display: block !important;
-            }
-            .overlay {
-                display: none;
-                position: fixed;
-                left: 0;
-                width: 100%;
-                height: 100vh;
-                background: rgba(0,0,0,0.5);
-                z-index: 999;
-            }
-            .overlay.show {
-                display: block;
-            }
-        }
-
-        .mobile-menu-btn {
+        .overlay {
             display: none;
-        }
-
-        .logo-text {
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        header .d-flex.align-items-center {
-            display: none !important;
-        }
-        .sidebar.collapsed .sidebar-header {
-            padding: 0.75rem 0.25rem !important;
-            margin: 0;
-        }
-        .sidebar.collapsed .nav-link {
-            margin: 0.125rem 0.25rem !important;
-            padding: 0.6rem 0.4rem !important;
-        }
-        .profile-section {
-            border-top: 1px solid #dee2e6;
-            padding: 1rem;
-        }
-        .profile-btn {
-            display: flex;
-            align-items: center;
+            position: fixed;
+            left: 0;
             width: 100%;
-            background: none;
-            border: none;
-            padding: 0.5rem;
-            border-radius: 0.375rem;
-            text-align: left;
-            color: #333;
-            text-decoration: none;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
         }
-        .profile-btn:hover {
-            background-color: #e9ecef;
+        .overlay.show {
+            display: block;
         }
-        .profile-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 0.75rem;
-        }
-        .profile-info {
-            flex: 1;
-        }
-        .profile-name {
-            font-weight: 500;
-            font-size: 0.9rem;
-            margin: 0;
-        }
-        .profile-role {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin: 0;
-        }
-    </style>
+    }
+
+    .mobile-menu-btn {
+        display: none;
+    }
+
+    .logo-text {
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    header .d-flex.align-items-center {
+        display: none !important;
+    }
+    .sidebar.collapsed .sidebar-header {
+        padding: 0.75rem 0.25rem !important;
+        margin: 0;
+    }
+    .sidebar.collapsed .nav-link {
+        margin: 0.125rem 0.25rem !important;
+        padding: 0.6rem 0.4rem !important;
+    }
+    .profile-section {
+        border-top: 1px solid #dee2e6;
+        padding: 1rem;
+    }
+    .profile-btn {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        text-align: left;
+        color: #333;
+        text-decoration: none;
+    }
+    .profile-btn:hover {
+        background-color: #e9ecef;
+    }
+    .profile-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 0.75rem;
+    }
+    .profile-info {
+        flex: 1;
+    }
+    .profile-name {
+        font-weight: 500;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+    .profile-role {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin: 0;
+    }
+
+    /* Новые стили для адаптивности */
+    .content-wrapper {
+        transition: all 0.3s ease;
+    }
+    .adaptive-padding {
+        transition: all 0.3s ease;
+    }
+</style>
 </head>
 <body>
     <!-- Header -->
@@ -226,7 +245,7 @@
                         <i class="bi bi-book me-2"></i>
                         <span class="nav-link-text">Теориясе</span>
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{{ url_for('tatar_ediplere') }}">
                         <i class="bi bi-heart me-2"></i>
                         <span class="nav-link-text">Татар әдипләре</span>
                     </a>
@@ -263,8 +282,11 @@
             <!-- Добавляем секцию профиля -->
         <div class="profile-section">
             <a href="{{ url_for('profile') }}" class="profile-btn">
-                <img src="{{ current_user.avatar or url_for('static', filename='img/default_avatar.png') }}"
-                     alt="Аватар" class="profile-avatar">
+                {% if user.avatar and user.avatar != 'default_avatar.png' %}
+                    <img class="profile-avatar" src="{{ url_for('static', filename='upload/' + user.avatar) }}" alt="Аватар">
+                {% else %}
+                    <img class="profile-avatar" src="{{ url_for('static', filename='img/default_avatar.png') }}" alt="Аватар">
+                {% endif %}
                 <div class="profile-info">
                     <p class="profile-name">
                         {% if current_user.is_authenticated %}
@@ -295,7 +317,6 @@
                     <span class="logo-text">ТатарPRO</span></a>
             </div>
 
-
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{{ url_for('language_tat') }}" class="nav-link px-2 link-dark"><img style="margin-right: 3px;" src="{{ url_for('static', filename='img/tatar-icon.png') }}"> Тат</a></li>
                 <li><a href="{{ url_for('language_ru') }}" class="nav-link px-2 link-dark"><img style="margin-right: 3px;" src="{{ url_for('static', filename='img/russia-icon.png') }}"> Рус</a></li>
@@ -320,16 +341,16 @@
             const overlay = document.getElementById('overlay');
 
             function loadSidebarState() {
-            if (window.innerWidth > 768) {
-                // Всегда collapsed по умолчанию
-                sidebar.classList.add('collapsed');
-                if (mainContent) {
-                    mainContent.classList.add('sidebar-collapsed');
-                }
-                sidebarToggle.querySelector('i').className = 'bi bi-chevron-right';
+                if (window.innerWidth > 768) {
+                    // Всегда collapsed по умолчанию
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-collapsed');
+                    }
+                    sidebarToggle.querySelector('i').className = 'bi bi-chevron-right';
 
-                // Сохраняем состояние collapsed
-                localStorage.setItem('sidebarState', 'collapsed');
+                    // Сохраняем состояние collapsed
+                    localStorage.setItem('sidebarState', 'collapsed');
                 }
             }
 
