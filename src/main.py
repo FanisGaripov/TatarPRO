@@ -20,7 +20,7 @@ from src.fixtures import add_sample_tests
 
 load_dotenv()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('FLASK_DATABASE', default='sqlite:///database.db')
 app.config['UPLOAD_FOLDER'] = 'static/upload'
 app.secret_key = os.getenv('FLASK_SECRETKEY')
 DEBUG_FROM_ENV = os.getenv('FLASK_DEBUG')
@@ -451,8 +451,8 @@ def register():
                     db.session.add(user)
                     db.session.commit()
                     return redirect(url_for('login'))
-                except:
-                    pass
+                except Exception as e:
+                    print(e)
         elif User.query.filter_by(username=username).first():
             return 'Пользователь с таким именем уже есть'
     return render_template('pages/register.html', user=user)
@@ -461,17 +461,17 @@ def register():
 @app.route('/profile')
 def profile():
     user = flask_login.current_user
-    test_results = TestResult.query.filter_by(user_id=user.id).all()
-    scores = [result.score for result in test_results]
-    if len(scores) > 0:
-        avg_scores = round(sum(scores) / len(scores), 2)
-    else:
-        avg_scores = 0
-    tests = [test.id for test in test_results]
-    tests_count = len(tests)
-    today = datetime.now()
-    days_at_the_site = (today - user.created_at).days
     if user.is_authenticated:
+        test_results = TestResult.query.filter_by(user_id=user.id).all()
+        scores = [result.score for result in test_results]
+        if len(scores) > 0:
+            avg_scores = round(sum(scores) / len(scores), 2)
+        else:
+            avg_scores = 0
+        tests = [test.id for test in test_results]
+        tests_count = len(tests)
+        today = datetime.now()
+        days_at_the_site = (today - user.created_at).days
         return render_template(
             'pages/profile.html',
             user=user,

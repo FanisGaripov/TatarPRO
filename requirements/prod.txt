@@ -6,3 +6,4 @@ Flask-SQLAlchemy==3.1.1
 gunicorn==23.0.0
 apscheduler==3.11.1
 g4f[all]
+psycopg2==2.9.11

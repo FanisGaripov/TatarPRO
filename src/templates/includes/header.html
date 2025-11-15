@@ -1,4 +1,9 @@
 <style>
+    .container {
+        margin-left: 125px;
+        min-width: calc(100% - 125px);
+        width: calc(100% - 125px);
+    }
     .sidebar {
         height: 100%;
         background-color: #f8f9fa;
@@ -91,6 +96,10 @@
 
     /* Mobile styles */
     @media (max-width: 768px) {
+        .container {
+            margin-left: auto;
+            width: 100%;
+        }
         .sidebar {
             transform: translateX(-100%);
             width: 280px;
@@ -107,6 +116,10 @@
         }
         .mobile-menu-btn {
             display: block !important;
+            position: absolute;
+            left: 15px;
+            top: 30px;
+            transform: translateY(-50%);
         }
         .overlay {
             display: none;
@@ -333,79 +346,123 @@
     <div class="overlay" id="overlay"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const mainContent = document.getElementById('mainContent');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const overlay = document.getElementById('overlay');
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mainContent = document.getElementById('mainContent');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const overlay = document.getElementById('overlay');
 
-            function loadSidebarState() {
-                if (window.innerWidth > 768) {
-                    // Всегда collapsed по умолчанию
-                    sidebar.classList.add('collapsed');
-                    if (mainContent) {
-                        mainContent.classList.add('sidebar-collapsed');
-                    }
-                    sidebarToggle.querySelector('i').className = 'bi bi-chevron-right';
-
-                    // Сохраняем состояние collapsed
-                    localStorage.setItem('sidebarState', 'collapsed');
+        function loadSidebarState() {
+            if (window.innerWidth > 768) {
+                // Всегда collapsed по умолчанию
+                sidebar.classList.add('collapsed');
+                if (mainContent) {
+                    mainContent.classList.add('sidebar-collapsed');
                 }
-            }
+                sidebarToggle.querySelector('i').className = 'bi bi-chevron-right';
 
-            // Save state to localStorage
-            function saveSidebarState() {
-                if (window.innerWidth > 768) {
-                    const isCollapsed = sidebar.classList.contains('collapsed');
-                    localStorage.setItem('sidebarState', isCollapsed ? 'collapsed' : 'expanded');
-                }
+                // Сохраняем состояние collapsed
+                localStorage.setItem('sidebarState', 'collapsed');
             }
+        }
 
-            // Toggle sidebar for desktop
-            function toggleSidebar() {
-                if (window.innerWidth > 768) {
-                    sidebar.classList.toggle('collapsed');
+        // Save state to localStorage
+        function saveSidebarState() {
+            if (window.innerWidth > 768) {
+                const isCollapsed = sidebar.classList.contains('collapsed');
+                localStorage.setItem('sidebarState', isCollapsed ? 'collapsed' : 'expanded');
+            }
+        }
+
+        // Toggle sidebar for desktop
+        function toggleSidebar() {
+            if (window.innerWidth > 768) {
+                sidebar.classList.toggle('collapsed');
+                if (mainContent) {
                     mainContent.classList.toggle('sidebar-collapsed');
-
-                    const icon = sidebarToggle.querySelector('i');
-                    if (sidebar.classList.contains('collapsed')) {
-                        icon.className = 'bi bi-chevron-right';
-                    } else {
-                        icon.className = 'bi bi-chevron-left';
-                    }
-
-                    saveSidebarState();
                 }
+
+                const icon = sidebarToggle.querySelector('i');
+                if (sidebar.classList.contains('collapsed')) {
+                    icon.className = 'bi bi-chevron-right';
+                } else {
+                    icon.className = 'bi bi-chevron-left';
+                }
+
+                saveSidebarState();
+            } else {
+                // На мобильных - закрываем сайдбар
+                closeMobileSidebar();
             }
+        }
 
-            // Toggle mobile sidebar
-            function toggleMobileSidebar() {
-                sidebar.classList.toggle('mobile-open');
-                sidebar.classList.remove('collapsed');
-                overlay.classList.toggle('show');
-                document.body.style.overflow = sidebar.classList.contains('mobile-open') ? 'hidden' : '';
+        // Toggle mobile sidebar
+        function toggleMobileSidebar() {
+            sidebar.classList.toggle('mobile-open');
+            sidebar.classList.remove('collapsed');
+            overlay.classList.toggle('show');
+            document.body.style.overflow = sidebar.classList.contains('mobile-open') ? 'hidden' : '';
+
+            // Показываем/скрываем кнопку закрытия в сайдбаре
+            if (window.innerWidth <= 768) {
+                sidebarToggle.style.display = sidebar.classList.contains('mobile-open') ? 'block' : 'none';
             }
+        }
 
-            // Close mobile sidebar
-            function closeMobileSidebar() {
-                sidebar.classList.remove('mobile-open');
-                overlay.classList.remove('show');
-                document.body.style.overflow = '';
+        // Close mobile sidebar
+        function closeMobileSidebar() {
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+
+            if (window.innerWidth <= 768) {
+                sidebarToggle.style.display = 'none';
             }
+        }
 
-            // Event listeners
-            sidebarToggle.addEventListener('click', toggleSidebar);
-            mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
-            overlay.addEventListener('click', closeMobileSidebar);
+        // Close sidebar when clicking on overlay (любая область вне сайдбара)
+        function handleOverlayClick(e) {
+            if (e.target === overlay) {
+                closeMobileSidebar();
+            }
+        }
 
-            // Close mobile sidebar when clicking on links
-            const navLinks = sidebar.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', closeMobileSidebar);
-            });
+        // Event listeners
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
+        overlay.addEventListener('click', handleOverlayClick);
 
-            // Initial load
-            loadSidebarState();
+        // Close mobile sidebar when clicking on links
+        const navLinks = sidebar.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMobileSidebar);
         });
-    </script>
+
+        // Close on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMobileSidebar();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeMobileSidebar();
+                sidebarToggle.style.display = 'none';
+            } else {
+                // На мобильных скрываем кнопку переключения в сайдбаре
+                sidebarToggle.style.display = 'none';
+            }
+        });
+
+        // Initial load
+        loadSidebarState();
+
+        // Инициализируем отображение кнопки на мобильных
+        if (window.innerWidth <= 768) {
+            sidebarToggle.style.display = 'none';
+        }
+    });
+</script>
