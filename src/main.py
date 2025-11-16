@@ -44,6 +44,11 @@ scheduler.add_job(scheduled_task, 'interval', hours=24)
 scheduler.start()
 
 
+@app.route('/yandex_0709442036cae435.html')
+def ya():
+    return render_template('yandex_0709442036cae435.html')
+
+
 @app.route('/')
 def index():
     user = flask_login.current_user
