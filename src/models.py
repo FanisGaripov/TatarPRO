@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     avatar = db.Column(db.String(150), default='default_avatar.png')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(100), default='Укучы')
 
     test_results = db.relationship('TestResult', backref='user', lazy=True)
 

@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, url_for, redirect, jsonify, session, Response, stream_with_context
 from flask_login import login_required, UserMixin, LoginManager, login_user
 import flask_login
+from flask_migrate import Migrate
 from apscheduler.schedulers.background import BackgroundScheduler
 import g4f
 
@@ -23,6 +24,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('FLASK_DATABASE', default='sqlite:///database.db')
 app.config['UPLOAD_FOLDER'] = 'static/upload'
 app.secret_key = os.getenv('FLASK_SECRETKEY')
+migrate = Migrate(app, db)
 DEBUG_FROM_ENV = os.getenv('FLASK_DEBUG')
 if DEBUG_FROM_ENV in ('t', '1', 'True', 'y', 'true', 'yes'):
     DEBUG = True
@@ -448,6 +450,7 @@ def register():
         name = request.form['name']
         surname = request.form['surname']
         email = request.form['email']
+        status = request.form['status']
         if not User.query.filter_by(username=username).first():
             if password == confirm_password:
                 user = User(username=username, name=name, surname=surname, email=email)
